@@ -2,6 +2,8 @@ This is the project for crawling CNN news articles and comments from Disqus.
 
 DICTIONARY DESCRIPTION:
 
+*NOTE: ',' in each Format means '\t' in the file.
+
 1. Article Tables:
 
     1) Author Table:
