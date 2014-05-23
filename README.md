@@ -8,19 +8,19 @@
 
 #### 1. Article Tables:
 
-    1) Author Table:
+###### 1) Author Table:
 
         Format: {Author_ID, Author_Name, Author_Title, Article_Counts}
 
         FilesName: "Dict_Authors"
 
-    2) Article Table:
+###### 2) Article Table:
 
         Format: {Art_ID, Art_Title, Date, URL, Text}
 
         FileName: "Dict_Articles"
 
-    3) Article&Author Relation Table:
+###### 3) Article&Author Relation Table:
 
         Format: {Author_ID, Art_ID}
 
