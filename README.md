@@ -4,9 +4,9 @@
 
 ## DICTIONARY DESCRIPTION:
 
-NOTE: ',' in each Format means '\t' in the file.
+*NOTE: ',' in each Format means '\t' in the file.*
 
-- 1. Article Tables:
+#### 1. Article Tables:
 
     1) Author Table:
 
@@ -26,7 +26,7 @@ NOTE: ',' in each Format means '\t' in the file.
 
         FileName: "Dict_Author_Article"
 
-- 2. Comments Tables:
+#### 2. Comments Tables:
 
     1) Article&Comment Relation Table:
 
