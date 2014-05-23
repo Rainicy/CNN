@@ -28,19 +28,19 @@
 
 #### 2. Comments Tables:
 
-    1) Article&Comment Relation Table:
+##### 1) Article&Comment Relation Table:
 
         Format: {Art_ID, Comment_ID}
 
         FileName: "Dict_Article_Comment"
 
-    2) Comment Table:
+##### 2) Comment Table:
 
         Format: {ID, User_ID, parent(reply_to), createdAt, likes, dislikes, message}
 
         FileName: "Dict_Comments"
 
-    3) User Table:
+##### 3) User Table:
 
         Format: {User_ID, User_Name, Name, joinedAt, reputation}
 
