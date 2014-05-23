@@ -1,10 +1,12 @@
-This is the project for crawling CNN news articles and comments from Disqus.
+# CNN PROJECT
 
-DICTIONARY DESCRIPTION:
+**_This is the project for crawling CNN news articles and comments from Disqus._**
 
-*NOTE: ',' in each Format means '\t' in the file.
+## DICTIONARY DESCRIPTION:
 
-1. Article Tables:
+NOTE: ',' in each Format means '\t' in the file.
+
+- 1. Article Tables:
 
     1) Author Table:
 
@@ -24,7 +26,7 @@ DICTIONARY DESCRIPTION:
 
         FileName: "Dict_Author_Article"
 
-2. Comments Tables:
+- 2. Comments Tables:
 
     1) Article&Comment Relation Table:
 
