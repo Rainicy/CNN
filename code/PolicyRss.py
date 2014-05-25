@@ -65,29 +65,29 @@ def buildArticleTables(url):
 	# print soup.prettify()
 	return ifContainsDisqus
 
+if __name__ == '__main__':
+	# Feed from CNN politics
+	policyURL = "http://rss.cnn.com/rss/cnn_allpolitics.rss"
+	feed = feedparser.parse(policyURL)
 
-# Feed from CNN politics
-policyURL = "http://rss.cnn.com/rss/cnn_allpolitics.rss"
-feed = feedparser.parse(policyURL)
+	# Remove all the links of video 
+	removeLink = 'http://www.cnn.com/video/'
+	KEYWORD = 'politics'
+		
+	# List for the links, which already have been collected
+	dictList = []
 
-# Remove all the links of video 
-removeLink = 'http://www.cnn.com/video/'
-KEYWORD = 'politics'
-	
-# List for the links, which already have been collected
-dictList = []
-
-count = 1
-for item in feed['items']:
-    url =  item.guid
-    if url not in dictList:	# new links 
-	    if (removeLink not in url) and (KEYWORD in url):	# if it is not a video link
-	    	if buildArticleTables(url): # Also if the article use the disqus system
-	    		writeDictFile(url)	# write the Link
-	    		dictList.append(dictList)
-	    		# raw_input()
-	    		dictList.append(url) # add the link to the link list
-	    		count += 1
+	count = 1
+	for item in feed['items']:
+	    url =  item.guid
+	    if url not in dictList:	# new links 
+		    if (removeLink not in url) and (KEYWORD in url):	# if it is not a video link
+		    	if buildArticleTables(url): # Also if the article use the disqus system
+		    		writeDictFile(url)	# write the Link
+		    		dictList.append(dictList)
+		    		# raw_input()
+		    		dictList.append(url) # add the link to the link list
+		    		count += 1
 
     
     
