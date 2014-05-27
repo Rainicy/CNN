@@ -16,7 +16,7 @@
 
 ###### 2) Article Table:
 
-        Format: {Art_ID, Art_Title, Date, URL, Text}
+        Format: {Art_ID, Art_Topic, Art_Title, Date, Timestamp, URL, Text}
 
         FileName: "Dict_Articles"
 
