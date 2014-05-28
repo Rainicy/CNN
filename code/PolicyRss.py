@@ -79,7 +79,7 @@ def buildArticleTables(url):
 		text = ''
 		for t in soup.find_all('p'):
 			text += t.get_text().encode('ascii', 'ignore') + ' '
-		text = text.strip('\n')
+		text = text.replace('\n', ' ')
 
 		# write the URL-Author to the file
 		writeAuthors(url, author)
