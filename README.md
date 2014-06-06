@@ -46,3 +46,10 @@
 
         FileName: "Dict_Users"
 
+
+#### 3. Log File:
+
+###### 1) News Log:
+        Format: {TimeStamp, TotalCount, NewsIDs}
+        FileName: "news.log"
+
