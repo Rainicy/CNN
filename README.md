@@ -2,6 +2,7 @@
 
 **_This is the project for crawling CNN news articles and comments from Disqus._**
 
+
 ## DICTIONARY DESCRIPTION:
 
 *NOTE: ',' in each Format means '\t' in the file.*
