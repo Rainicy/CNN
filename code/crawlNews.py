@@ -20,6 +20,9 @@ def main():
 
 	# Remove all the links of video 
 	removeLink = 'http://www.cnn.com/video/'
+
+	# crawling news log file name
+	logName = '../log/news.log'
 		
 	count = 1
 	# List for the links, which already have been collected
@@ -61,7 +64,7 @@ def main():
 				    		count += 1
 				    		sleep(2)
 				    		
-		writeLog(startTime, startCount, count)
+		writeLog(logName, startTime, startCount, count)
 
 		print 'Sleeping for 15 minutes......'
 		sleep(900)
