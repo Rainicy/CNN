@@ -36,9 +36,9 @@ def main():
 		startTime = datetime.now()
 		# write the comments to the file
 		fileName = '../data/comments/' + str(i+1)
-		writeComments(fileName, url)
+		count = writeComments(fileName, url)
 		# write the log to comments.log
-		writeCommentsLog(LogName, str(i+1), startTime, datetime.now())
+		writeCommentsLog(LogName, str(i+1), startTime, datetime.now(), count)
 
 
 

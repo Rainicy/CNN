@@ -26,7 +26,7 @@ def writeLog(log, time, startCount, endCount):
 		file.write('%s\ttotal: %d\tIDs: %s\n'% (time, totalCount, IDs))
 		file.close()
 
-def writeCommentsLog(log, Id, startTime, endTime):
+def writeCommentsLog(log, Id, startTime, endTime, count):
 	'''
 	Description: Record a log in one-time crawling Comments. 
 				 And write it to the comments.log
@@ -41,7 +41,7 @@ def writeCommentsLog(log, Id, startTime, endTime):
 	'''	
 
 	with open(log, 'a') as file: 
-		file.write('%s\t%s\t%s\n'% (Id, startTime, endTime))
+		file.write('ID: %s\ttotal: %d\t%s\t%s\t\n'% (Id, count, startTime, endTime))
 		file.close()
 
 def writeStartTime(log, startTime):

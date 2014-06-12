@@ -94,6 +94,7 @@ def writeComments(f, url):
     file.close()
 
   print '{} seconds | {} comments'.format(time.time()-startTime, len(comments))
+  return len(comments)
 
 
 
