@@ -54,3 +54,6 @@
         Format: {TimeStamp, TotalCount, NewsIDs}
         FileName: "news.log"
 
+###### 2) Comments Log:
+        Format: {NewsID, TotalCount, StartTime, EndTime}
+        FileName: "comments.log"
