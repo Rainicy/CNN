@@ -93,7 +93,7 @@ def writeComments(f, url):
       file.write(json.dumps(comments[i], file,) + '\n')
     file.close()
 
-  print '{} seconds | {} comments'.format(time.time()-startTime, len(comments))
+  print '\t{} seconds | {} comments'.format(time.time()-startTime, len(comments))
   return len(comments)
 
 
