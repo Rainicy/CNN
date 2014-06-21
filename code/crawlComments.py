@@ -49,8 +49,8 @@ def main():
 		lastLine = int(lines[-1].split('\n')[0])
 		file.close()
 
-	print lastLine 
-	raw_input()
+	# print lastLine 
+	# raw_input()
 	# Step 2: Open news.log to find the line in last time
 	with open('../log/news.log', 'r') as file:
 		newsLogs = file.readlines()
@@ -67,7 +67,7 @@ def main():
 		deltaDays = (today - date).days
 		# if the deltaDays is in one week gap, crawl comments
 		# and the total count news not equal to 0
-		if deltaDays >= 6:
+		if deltaDays >= 7:
 			# there exits news new
 			if count != 'total: 0':
 				# get the ids
@@ -95,4 +95,8 @@ def main():
 
 
 if __name__ == '__main__':
-	main()
+	while True:
+		print '-------------Crawling Comments------------'
+		main()
+		print '------------Waiting for 3 hours-----------'
+		sleep(10800)

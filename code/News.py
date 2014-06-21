@@ -73,6 +73,8 @@ def buildArticleTables(url, count):
 		if time: 
 			time = time.group(1).encode('ascii', 'ignore')
 
+		title = soup.title.string.encode('ascii', 'ignore')
+
 		# crawl the article's text
 		text = ''
 		for t in soup.find_all('p'):
@@ -82,9 +84,9 @@ def buildArticleTables(url, count):
 		# write the URL-Author to the file
 		writeAuthors(url, author)
 		# write the Article's info to the file
-		writeArticle(url, topic, soup.title.string, date, time, text)
+		writeArticle(url, topic, title, date, time, text)
 
-		print '%d| %s | %s' % (count, topic, soup.title.string)
+		print '%d| %s | %s' % (count, topic, title)
 		ifContainsDisqus = True
 
 	else:
