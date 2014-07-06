@@ -4,17 +4,71 @@ Created on June 20, 2014
 @author Rainicy
 '''
 from datetime import *
+import matplotlib.pyplot as plt
+
+def plotReplies():
+	'''
+	Description: Plot the comments replies timestamps curve. 
+
+	@Input: 
+		60 News comments replies times in folder './timestamps/'.
+	@Output:
+		60 Nes comments replies times png files in the folder './plots/'.
+	'''
+	for i in range(1, 61):
+		# open one timestamp as the example.
+		with open('./timestamps/' + str(i), 'r') as file:
+			lines = file.readlines()
+			listTimes = []
+			for line in lines:
+				line = line.split('\n')[0]
+				line = line.replace('T', ' ')
+				time = datetime.strptime(line, "%Y-%m-%d %H:%M:%S")
+				listTimes.append(time)
+
+			# sort the times
+			listTimes.sort()
+			# print listTimes
+			startTime = listTimes[0]
+			x = []
+			y = []
+			# go through the timestamps
+			count = 0
+			deltaSeconds = 3600
+			for time in listTimes[1:-1]:
+				# within the delta time, count++
+				if (time - startTime).seconds <= deltaSeconds:
+					count += 1
+				# append the current time and the count to the x and y
+				else:
+					x.append(time)
+					y.append(count)
+					count = 0
+					deltaSeconds += 3600
+					if deltaSeconds > 86399:
+						deltaSeconds %= 3600
+						startTime = time
+
+			# print len(x)
+			plt.clf()
+			plt.plot(x, y)
+			# beautify the x-labels
+			plt.gcf().autofmt_xdate()
+
+			plt.savefig('./plots/' + str(i))
+			# plt.show()
 
 
-def main():
+
+def estimateRelies():
 	'''
 	Description: 
 		To test the comments replying gaps. 
 
-		Input:
+		@Input:
 			60 News comments replies times in folder './timestamps'.
 
-		Output:
+		@Output:
 			stattimes: #total comments | # within 7 days | # out 7 days | percent of 7 days
 	'''
 	totalDays = 0
@@ -57,4 +111,4 @@ def main():
 	out.close()
 
 if __name__ == '__main__':
-	main()
+	plotReplies()
