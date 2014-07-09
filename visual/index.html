@@ -121,13 +121,86 @@ d3.json("votes.json", function(error, graph) {
       .call(force.drag);
 
 
-
   var text = svg.append("g").selectAll("text")
       .data(graph.nodes)
     .enter().append("text")
       .attr("x", 16)
       .attr("y", ".31em")
       .text(function(d) {return d.name; });
+
+  var legend = svg.append("g")
+      .attr("class", "legend")
+      .data(graph.nodes);
+
+  legend.selectAll("circle")
+        .data(graph.nodes)
+        .enter()
+        .append("circle")
+        .attr("cx", width - 200)
+        .attr("cy", function(d) {return (d.group+1) * 20;})
+        .attr("r", 6)
+        .style("fill", function(d) { return color(d.group); });
+
+  legend.selectAll("text")
+        .data(graph.nodes)
+        .enter()
+        .append("text")
+        .attr("x", width - 170)
+        .attr("y", function(d) {return (d.group+1) * 20 + 5;})
+        .text(function(d) {
+          if (d.group == 0) {
+            return "Voter";
+          }
+          else if (d.group == 1) {
+            return "Bill";
+          }
+          else {
+            return "Word";
+          }
+        });
+  var legendvote = svg.append("g")
+      .attr("class", "legend")
+      .data(graph.links);
+
+  legendvote.selectAll("rect")
+            .data(graph.links)
+            .enter()
+            .append("rect")
+            .attr("x", width - 205)
+            .attr("y", function(d) {
+              if (d.type == "yes") {
+                return 80;
+              }
+              else if (d.type == "no") {
+                return 100;
+              }
+              else return -100;
+            })
+            .attr("width", 25)
+            .attr("height", 3)
+            .style("fill", function(d) {
+              if (d.type == "yes") return "green";
+              else if (d.type == "no") return "red";
+            });
+
+  legendvote.selectAll("text")
+            .data(graph.links)
+            .enter()
+            .append("text")
+            .attr("x", width - 170)
+            .attr("y", function(d) {
+              if (d.type == "yes") {
+                return 85;
+              }
+              else if (d.type == "no") {
+                return 105;
+              }
+              else return -100;
+            })
+            .text(function(d) {
+              if (d.type == "yes") return "yes";
+              else return "no";
+            });
 
   function tick() {
     path.attr("d", linkArc);
