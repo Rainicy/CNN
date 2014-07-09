@@ -37,15 +37,15 @@ text {
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 
-var width = 960,
-    height = 500;
+var width = 1200,
+    height = 960;
 
 var marginwidth = 200;
     marginheigt = 100;
 
 var numvoters = 10;
     numbills = 10;
-    numwords = 3;
+    numwords = 10;
 
 var color = d3.scale.category20();
 
@@ -119,6 +119,7 @@ d3.json("votes.json", function(error, graph) {
       .style("fill", function(d) { return color(d.group); })
       // .on("dblclick", dblclick)
       .call(force.drag);
+
 
 
   var text = svg.append("g").selectAll("text")

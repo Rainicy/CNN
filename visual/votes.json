@@ -20,7 +20,18 @@
     {"name":"S_278","group":1, "index": 16},
     {"name":"S_384","group":1, "index": 17},
     {"name":"H_R_3321","group":1, "index": 18},
-    {"name":"H_CON_RES_51","group":1, "index": 19}
+    {"name":"H_CON_RES_51","group":1, "index": 19},
+
+    {"name":"Fiscal", "group":2, "index": 20},
+    {"name":"Funds", "group":2, "index": 21},
+    {"name":"Serve", "group":2, "index": 22},
+    {"name":"Integration", "group":2, "index": 23},
+    {"name":"Law", "group":2, "index": 24},
+    {"name":"Defense", "group":2, "index": 25},
+    {"name":"Land", "group":2, "index": 26},
+    {"name":"Education", "group":2, "index": 27},
+    {"name":"Resolution", "group":2, "index": 28},
+    {"name":"Referred", "group":2, "index": 29}
   ],
   "links":[
     {"source":0,"target":10,"type":"yes"},
@@ -105,7 +116,29 @@
     {"source":5,"target":19,"type":"no"},
     {"source":6,"target":19,"type":"no"},
     {"source":8,"target":19,"type":"no"},
-    {"source":9,"target":19,"type":"no"}
-    
+    {"source":9,"target":19,"type":"no"},
+
+    {"source":10,"target":20,"type":"none"},
+    {"source":10,"target":21,"type":"none"},
+
+    {"source":11,"target":27,"type":"none"},
+
+    {"source":12,"target":24,"type":"none"},
+
+    {"source":13,"target":22,"type":"none"},
+
+    {"source":14,"target":21,"type":"none"},
+
+    {"source":15,"target":23,"type":"none"},
+
+    {"source":16,"target":26,"type":"none"},
+
+    {"source":17,"target":21,"type":"none"},
+
+    {"source":18,"target":25,"type":"none"},
+
+    {"source":19,"target":28,"type":"none"},
+    {"source":19,"target":29,"type":"none"}
+
   ]
 }
