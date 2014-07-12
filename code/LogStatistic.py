@@ -110,7 +110,7 @@ def averageUsers():
 		items = line.split('\t')
 		time = datetime.strptime(items[0], "%Y-%m-%d %H:%M:%S.%f")
 		delta_day = (time - startTime).days
-		if (delta_day>=0) and (delta_day<=31):
+		if (delta_day>=0) and (delta_day<=27):
 			if items[1] == 'total: 0':
 				continue
 			else:
