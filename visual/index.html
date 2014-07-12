@@ -158,6 +158,8 @@ d3.json("votes.json", function(error, graph) {
             return "Word";
           }
         });
+
+
   var legendvote = svg.append("g")
       .attr("class", "legend")
       .data(graph.links);
@@ -177,7 +179,7 @@ d3.json("votes.json", function(error, graph) {
               else return -100;
             })
             .attr("width", 25)
-            .attr("height", 3)
+            .attr("height", 2)
             .style("fill", function(d) {
               if (d.type == "yes") return "green";
               else if (d.type == "no") return "red";
