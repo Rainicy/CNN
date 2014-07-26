@@ -6,6 +6,34 @@ Created on June 20, 2014
 from datetime import *
 import matplotlib.pyplot as plt
 
+def plotAccumulate():
+	with open('./timestamps/comments', 'r') as file:
+		lines = file.readlines()
+		file.close()
+	x = []
+	y = []
+
+	for line in lines:
+		line = line.split('\n')[0]
+		line = line.split('\t')
+		time = datetime.strptime(line[0], "%Y-%m-%d %H:%M:%S")
+		x.append(time)
+		y.append(int(line[1]))
+
+	startTime = datetime.strptime("2014-04-10 14:44:57", "%Y-%m-%d %H:%M:%S")
+	endTime = datetime.strptime("2014-04-16 23:10:15", "%Y-%m-%d %H:%M:%S")
+
+	# print len(x)
+	plt.clf()
+	plt.axis([startTime, endTime, 0, 965])
+	plt.plot(x, y)
+	# beautify the x-labels
+	plt.gcf().autofmt_xdate()
+
+	# plt.savefig('./plots/' + str(i))
+	plt.show()
+
+
 def plotReplies():
 	'''
 	Description: Plot the comments replies timestamps curve. 
@@ -58,6 +86,30 @@ def plotReplies():
 			plt.savefig('./plots/' + str(i))
 			# plt.show()
 
+def accumulateReplies():
+	'''
+	Description: 
+		Accumulate all the replies by replying time.
+	'''
+	with open('./timestamps/1', 'r') as file:
+		lines = file.readlines()
+		listTimes = []
+		for line in lines:
+			line = line.split('\n')[0]
+			line = line.replace('T', ' ')
+			time = datetime.strptime(line, "%Y-%m-%d %H:%M:%S")
+			listTimes.append(time)
+			
+		listTimes.sort()
+		outfile = open('./timestamps/1_trans', 'w')
+		count = 0
+		for t in listTimes:
+			line = str(t) + '\t' + str(count) + '\n'
+			outfile.writelines(line)
+			count += 1
+
+		outfile.close()
+			
 
 
 def estimateRelies():
@@ -111,4 +163,4 @@ def estimateRelies():
 	out.close()
 
 if __name__ == '__main__':
-	plotReplies()
+	plotAccumulate()

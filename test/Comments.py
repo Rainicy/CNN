@@ -78,19 +78,16 @@ def crawlComments(url):
 
 def main():
   # open the links
-  with open('linksCNN', 'r') as file:
+  with open('../data/linksCNN', 'r') as file:
     lines = file.readlines()
     file.close()
 
   # starting crawling the timestamps. 
-  for count in range(55, 60):
+  for count in range(0, 60):
     url = lines[count].split('\n')[0]
     print 'crawling ID: ' + str(count+1)
-    # print url
-    # raw_input()
     comments = crawlComments(url)
-    # print len(comments)
-    # raw_input()
+    print len(comments)
     print 'writing  ID: ' + str(count+1)
 
     f = open('./timestamps/'+str(count+1), 'w')
