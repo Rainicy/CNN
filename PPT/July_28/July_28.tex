@@ -40,6 +40,7 @@
 \begin{itemize}
   \item Why d3.js? 
   \item Getting started
+  \item Summary
 \end{itemize}
 
 \end{frame}
@@ -100,6 +101,14 @@ Hypertext Markup Language is used to structure content for web browsers. The sim
 The Document Object Model refers to the hierarchical structure of HTML. Each bracketed tag is an element, and we refer to elements' relative relationships to each other in human terms: parent, child, sibling, ancestor, and descendant. In the HTML above, body is the parent element to both of its children, h1 and p (which are siblings to each other). All elements on the page are descendants of html.
 \end{frame}
 
+\begin{frame}{DOM Example} 
+\begin{figure}
+\centering
+\includegraphics[width=1.0\textwidth]{./images/DOM.png}
+\caption{\label{fig:DOM} DOM}
+\end{figure}
+\end{frame}
+
 \begin{frame}{CSS}
 Cascading Style Sheets are used to style the visual presentation of HTML pages.
 \newline \\
@@ -125,6 +134,9 @@ D3 is at its best when rendering visuals as Scalable Vector Graphics. SVG is a t
 \begin{enumerate}
 	\item Adding elements
 	\item Binding data
+	\item Using data
+	\item Drawing div
+	\item Drawing SVG
 \end{enumerate}
 \end{frame}
 
@@ -143,15 +155,165 @@ Data visualization is a process of mapping data to visuals. Data in, visual prop
 With D3, we bind our data input values to elements in the DOM. Binding is like attaching or associating data to specific elements, so that later you can reference those values to apply mapping rules.
 \end{frame}
 
-\subsection{Mathematics}
+\begin{frame}{Data}
+D3 is smart about handling different kinds of data, so it will accept practically any array of numbers, strings, or objects(themselves containing other arrays or key/value pair). It can handle \textbf{JSON} (and \textbf{GeoJSON}) gracefully, and even has a built-in method to help you load in \textbf{CSV} files. 
+For example:
+\begin{figure}
+\centering
+\includegraphics[width=1.0\textwidth]{./images/Data.png}
+\caption{\label{fig:data} Data}
+\end{figure}
+\end{frame}
 
-\begin{frame}{Readable Mathematics}
+\begin{frame}{Using Data}
+We use .data(datatset) for loading data. Once it is loaded. We can use High-functioning to parse each element in the whole dataset. For example:
+\begin{figure}
+\centering
+\includegraphics[width=1.0\textwidth]{./images/High_function.png}
+\caption{\label{fig:high} High Function}
+\end{figure}
+\end{frame}
 
-Let $X_1, X_2, \ldots, X_n$ be a sequence of independent and identically distributed random variables with $\text{E}[X_i] = \mu$ and $\text{Var}[X_i] = \sigma^2 < \infty$, and let
-$$S_n = \frac{X_1 + X_2 + \cdots + X_n}{n}
-      = \frac{1}{n}\sum_{i}^{n} X_i$$
-denote their mean. Then as $n$ approaches infinity, the random variables $\sqrt{n}(S_n - \mu)$ converge in distribution to a normal $\mathcal{N}(0, \sigma^2)$.
+\begin{frame}{Drawing divs}
+This is for starting drawing with data. Define a \textbf{div} as following:
+\begin{figure}
+\centering
+\includegraphics[width=1.0\textwidth]{./images/DIV.png}
+\caption{\label{fig:div} DIV}
+\end{figure}
+\end{frame}
 
+\begin{frame}{Drawing divs}
+The next step is using the div we just defined, named \textbf{bar}. The following is the example:
+\begin{figure}
+\centering
+\includegraphics[width=1.0\textwidth]{./images/BAR.png}
+\caption{\label{fig:bar} Using bar DIV}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Drawing divs}
+The final step we want to apply our dataset = [5,10,15,20,25] to the bar's heights. Using as following:
+\begin{figure}
+\centering
+\includegraphics[width=1.0\textwidth]{./images/style.png}
+\caption{\label{fig:style} Using Style}
+\end{figure}
+\end{frame}
+
+\begin{frame}{SVG} 
+Drawing with divs and other native HTML elements is possible, but a bit clunky and subject to the usual inconsistencies across different browsers. \\
+In fact D3 is most useful when used to generate and manipulate visuals as SVGs. Using SVG is more \textbf{reliable, visually consistent, and faster}.
+\end{frame} 
+
+\begin{frame}{SVG Shapes} 
+There are a number of visual elements that you can include between those SVG tags, including:
+\begin{itemize}
+	\item rect 
+	\item circle
+	\item ellipse 
+	\item line
+	\item text
+	\item path
+\end{itemize}
+\end{frame}
+
+\begin{frame}{SVG Shapes Examples} 
+\begin{figure}
+\includegraphics[width=1.0\textwidth]{./images/SVG_example.png}
+\caption{\label{fig:svgexample} SVG Example}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Drawing SVGs}
+Now if we are familiar with the basic structure of an SVG image and its elements, how can we start generating shapes from our data? \\
+We noticed that all properties of SVG elements are specified as attributes. That is, they are included as property/value pairs within each element tag, like this: 
+\begin{figure}
+\includegraphics[width=1.0\textwidth]{./images/svg_property.png}
+\caption{\label{fig:svgproperty} SVG Property}
+\end{figure}
+Fortunately, we have already used D3's handy \textbf{append()} and \textbf{attr()} methods to create new HTML elements and set their attributes. We can use these methods to generate SVG images. 
+\end{frame}
+
+\begin{frame} {Drawing SVGs}
+Two steps to use the data set generate SVG images. 
+\begin{enumerate}
+	\item Create the SVG
+	\item Data-driven Shapes 
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Create the SVG}
+First, we need to create the SVG element in which to place all our shapes. Example as following:
+\begin{figure}
+\includegraphics[width=1.0\textwidth]{./images/create_SVG.png}
+\caption{\label{fig:svgcreate} Create a SVG}
+\end{figure}
+\end{frame}
+
+\begin{frame} {Data-driven Shapes}
+Time to add some shapes. Still use \textbf{var dataset = [5,10,15,20,25]}.\\
+Then use data() to iterate through each data point, creating a circle for each one, as following:
+\begin{figure}
+\includegraphics[width=1.0\textwidth]{./images/svg_circles.png}
+\caption{\label{fig:svgcircles} Creating Circles on SVG}
+\end{figure}
+\end{frame}
+
+\begin{frame} {Data-driven Shapes}
+Look at the code in previous slide, 
+\begin{enumerate}
+	\item selectAll() will return empty references to all circles(which don't exist yet)
+	\item data() binds our data to the elements we're about to create
+	\item enter() returns a placeholder reference to the new element
+	\item  append() finally adds a circle to the DOM
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Data-driven Shapes}
+To continue play with circles in SVG. All these circles still need positions and sizes. Like:
+\begin{figure}
+\includegraphics[width=1.0\textwidth]{./images/circles.png}
+\caption{\label{fig:circles} Circles}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Data-driven Shapes}
+Do more color fills and strokes. Like:
+\begin{figure}
+\includegraphics[width=1.0\textwidth]{./images/color_circles.png}
+\caption{\label{fig:colorcircles} Color Circles}
+\end{figure}
+
+\end{frame}
+
+\subsection{Summary}
+
+\begin{frame}{Summary} 
+This is the basics we have learned so far:
+\begin{itemize}
+	\item Make DOM objects, attach data to them, use CSS.
+	\item The data can affect any attribute, shape, color, size, position, opacity, text, etc.
+	\item All the attributes can have transitions applied. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+There is more stuff to help us:
+\begin{itemize}
+	\item Add and remove objects to dynamically update visualization.
+	\item Helper functions for different charts: chord, histogram, hierarchy, pie, stack, tree, cluster, etc.
+	\item Drag and touch events, date formatting etc.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{References}
+\begin{itemize}
+	\item http://alignedleft.com/ 
+	\item http://lws.node3.org/
+	\item https://www.dashingd3js.com/
+	\item http://d3js.org/
+\end{itemize}
 \end{frame}
 
 \end{document}
