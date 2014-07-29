@@ -22,6 +22,13 @@ body {
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 
+// all the topics for user filtering
+var topics = ["Foreign", "Education", "Individual_roperty", "Financial", "Military", "Law", "Health_service", "Health_expenses", "Funds", "Public_transportation"]
+
+// the chosen two topics by user
+var x_topic = topics[0]
+var y_topic = topics[1]
+
 var margin = {top: 20, right: 20, bottom: 30, left: 40},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
@@ -51,49 +58,47 @@ var svg = d3.select("body").append("svg")
 // loading data
 d3.tsv("data.tsv", function(error, data) {
   data.forEach(function(d) {
-    d.Foreign = +d.Foreign;
-    d.Education = +d.Education;
+    d[x_topic] = +d[x_topic];
+    d[y_topic] = +d[y_topic];
   });
 
-  x.domain(d3.extend(data, function(d) { return d.Foreign; })).nice();
-  y.domain(d3.extend(data, function(d) { return d.Education;})).nice();
+  x.domain(d3.extent(data, function(d) { return d[x_topic]; })).nice();
+  y.domain(d3.extent(data, function(d) { return d[y_topic]; })).nice();
 
-  // build x axis
   svg.append("g")
       .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")   // push the axis to the bottom
+      .attr("transform", "translate(0," + height + ")")
       .call(xAxis)
-      .append("text")
+    .append("text")
       .attr("class", "label")
       .attr("x", width)
       .attr("y", -6)
       .style("text-anchor", "end")
-      .text("Foreign");
+      .text(x_topic);
 
-  // build y axis
   svg.append("g")
       .attr("class", "y axis")
       .call(yAxis)
-      .append("text")
+    .append("text")
       .attr("class", "label")
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Education");
+      .text(y_topic)
 
   svg.selectAll(".dot")
       .data(data)
-      .enter().append("circle")
+    .enter().append("circle")
       .attr("class", "dot")
       .attr("r", 3.5)
-      .attr("cx", function(d) { return x(d.Foreign); })
-      .attr("cy", function(d) { return y(d.Education); })
+      .attr("cx", function(d) { return x(d[x_topic]); })
+      .attr("cy", function(d) { return y(d[y_topic]); })
       .style("fill", function(d) { return color(d.party); });
 
   var legend = svg.selectAll(".legend")
       .data(color.domain())
-      .enter().append("g")
+    .enter().append("g")
       .attr("class", "legend")
       .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
@@ -109,8 +114,7 @@ d3.tsv("data.tsv", function(error, data) {
       .attr("dy", ".35em")
       .style("text-anchor", "end")
       .text(function(d) { return d; });
+
 });
 
 </script>
-</body>
-</html>
