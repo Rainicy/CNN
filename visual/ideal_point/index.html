@@ -21,6 +21,15 @@ body {
   stroke: #000;
 }
 
+svg {
+  font: 10px sans-serif;
+}
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
+
 </style>
 <body>
   <H1 align="center"> Ideal Point </H1>
@@ -66,7 +75,6 @@ var margin = {top: 20, right: 20, bottom: 30, left: 40},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-
 // update function
 var changeTopic = function() {
   var x_topic = document.getElementById('dropBox1').selectedOptions[0].text;
@@ -95,7 +103,6 @@ var changeTopic = function() {
       .attr("height", height + margin.top + margin.bottom)
     .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
   // loading data
   d3.tsv("data.tsv", function(error, data) {
     data.forEach(function(d) {
@@ -128,13 +135,19 @@ var changeTopic = function() {
         .style("text-anchor", "end")
         .text(y_topic);
 
-    svg.selectAll(".dot")
+    svg.call(d3.behavior.zoom().x(x).y(y).scaleExtent([1, 8]).on("zoom", zoom));
+    svg.append("rect")
+        .attr("class", "overlay")
+        .attr("width", width)
+        .attr("height", height);
+    var circle = svg.selectAll(".dot")
         .data(data)
       .enter().append("circle")
         .attr("class", "dot")
         .attr("r", 3.5)
-        .attr("cx", function(d) { return x(d[x_topic]); })
-        .attr("cy", function(d) { return y(d[y_topic]); })
+        .attr("transform", transform)
+        // .attr("cx", function(d) { return x(d[x_topic]); })
+        // .attr("cy", function(d) { return y(d[y_topic]); })
         .style("fill", function(d) { 
           if (d.party=="D") return "blue";
           else if(d.party=="R") return "red";
@@ -165,8 +178,18 @@ var changeTopic = function() {
         .text(function(d) { 
           return d;
         });
+
+    function zoom() {
+      circle.attr("transform", transform);
+    }
+
+    function transform(d) {
+      return "translate(" + x(d[x_topic]) + "," + y(d[y_topic]) + ")";
+    }
+
   });
 }
+
 
 changeTopic()
 </script>
