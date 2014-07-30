@@ -19,6 +19,31 @@ body {
 
 </style>
 <body>
+  <H1 align="center"> Ideal Point </H1>
+  <select onchange="changeTopic()" id="dropBox1">
+    <option>Foreign</option>
+    <option>Education</option>
+    <option>Individual_roperty</option>
+    <option>Financial</option>
+    <option>Military</option>
+    <option>Law</option>
+    <option>Health_service</option>
+    <option>Health_expenses</option>
+    <option>Funds</option>
+    <option>Public_transportation</option>
+  </select>
+  <select onchange="changeTopic()" id="dropBox2">
+    <option>Foreign</option>
+    <option>Education</option>
+    <option>Individual_roperty</option>
+    <option>Financial</option>
+    <option>Military</option>
+    <option>Law</option>
+    <option>Health_service</option>
+    <option>Health_expenses</option>
+    <option>Funds</option>
+    <option>Public_transportation</option>
+  </select>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 // References: 1) http://bl.ocks.org/mbostock/3887118#index.html
@@ -29,86 +54,77 @@ var topics = ["Foreign", "Education", "Individual_roperty", "Financial", "Milita
 var parties = ["Democratic", "Republican", "Independent"]
 
 // the chosen two topics by user
-var x_topic = topics[0]
-var y_topic = topics[1]
-
+// var x_topic = topics[0]
+// var y_topic = topics[1]
 var margin = {top: 20, right: 20, bottom: 30, left: 40},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-var x = d3.scale.linear()
-    .range([0, width]);
-
-var y = d3.scale.linear()
-    .range([height, 0]);
-
-// var color = d3.scale.category10();
-
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
-
-var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left");
-
 var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom);
+
+var g = svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-// loading data
-d3.tsv("data.tsv", function(error, data) {
-  data.forEach(function(d) {
-    d[x_topic] = +d[x_topic];
-    d[y_topic] = +d[y_topic];
-  });
+g.append('g')
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")");
+
+g.append('g')
+    .attr("class", "y axis");
+
+
+var changeTopic = function() {
+  var x_topic = document.getElementById('dropBox1').selectedOptions[0].text;
+  var y_topic = document.getElementById('dropBox2').selectedOptions[0].text;
+
+  // loading data
+  d3.tsv("data.tsv", function(error, data) {
+    data.forEach(function(d) {
+      d[x_topic] = +d[x_topic];
+      d[y_topic] = +d[y_topic];
+    });
+
+  var x = d3.scale.linear()
+      .range([0, width]);
+
+  var y = d3.scale.linear()
+      .range([height, 0]);
 
   x.domain(d3.extent(data, function(d) { return d[x_topic]; })).nice();
   y.domain(d3.extent(data, function(d) { return d[y_topic]; })).nice();
 
-  svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis)
-    .append("text")
-      .attr("class", "label")
-      .attr("x", width)
-      .attr("y", -6)
-      .style("text-anchor", "end")
-      .text(x_topic);
+  var circle = g.selectAll('.dot').data(data);
+  circle.enter().append('circle');
+  circle.exit().remove();
+  circle.attr("class", "dot")
+        .attr("r", 3.5)
+        .attr("cx", function(d) { return x(d[x_topic]); })
+        .attr("cy", function(d) { return y(d[y_topic]); })
+        .style("fill", function(d) { 
+          if (d.party=="D") return "blue";
+          else if(d.party=="R") return "red";
+          else if(d.party=="I") return "yellow";
+        });
 
-  svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
-    .append("text")
-      .attr("class", "label")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text(y_topic);
+  var xAxis = d3.svg.axis()
+      .scale(x)
+      .orient("bottom");
+    
 
-  svg.selectAll(".dot")
-      .data(data)
-    .enter().append("circle")
-      .attr("class", "dot")
-      .attr("r", 3.5)
-      .attr("cx", function(d) { return x(d[x_topic]); })
-      .attr("cy", function(d) { return y(d[y_topic]); })
-      .style("fill", function(d) { 
-        if (d.party=="D") return "blue";
-        else if(d.party=="R") return "red";
-        else if(d.party=="I") return "yellow";
-      });
+  var yAxis = d3.svg.axis()
+      .scale(y)
+      .orient("left");
 
-  var legend = svg.selectAll(".legend")
-      .data(parties)
-    .enter().append("g")
-      .attr("class", "legend")
-      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+  d3.select('.x.axis').call(xAxis);
+  d3.select('.y.axis').call(yAxis);
 
+  var legend = g.selectAll('.legend').data(parties);
+  legend.enter().append('legend');
+  legend.exit().remove();
+  legend.attr("class", "legend")
+        .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
   legend.append("rect")
       .attr("x", width - 18)
       .attr("width", 18)
@@ -118,7 +134,6 @@ d3.tsv("data.tsv", function(error, data) {
         else if (d == "Republican") return "red";
         else if (d == "Independent") return "yellow";
       });
-
   legend.append("text")
       .attr("x", width - 24)
       .attr("y", 9)
@@ -128,7 +143,8 @@ d3.tsv("data.tsv", function(error, data) {
         return d;
       });
 
+  });
+}
 
-});
-
+changeTopic()
 </script>
