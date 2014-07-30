@@ -21,9 +21,12 @@ body {
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
+// References: 1) http://bl.ocks.org/mbostock/3887118#index.html
 
 // all the topics for user filtering
 var topics = ["Foreign", "Education", "Individual_roperty", "Financial", "Military", "Law", "Health_service", "Health_expenses", "Funds", "Public_transportation"]
+
+var parties = ["Democratic", "Republican", "Independent"]
 
 // the chosen two topics by user
 var x_topic = topics[0]
@@ -39,7 +42,7 @@ var x = d3.scale.linear()
 var y = d3.scale.linear()
     .range([height, 0]);
 
-var color = d3.scale.category10();
+// var color = d3.scale.category10();
 
 var xAxis = d3.svg.axis()
     .scale(x)
@@ -85,7 +88,7 @@ d3.tsv("data.tsv", function(error, data) {
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text(y_topic)
+      .text(y_topic);
 
   svg.selectAll(".dot")
       .data(data)
@@ -94,10 +97,14 @@ d3.tsv("data.tsv", function(error, data) {
       .attr("r", 3.5)
       .attr("cx", function(d) { return x(d[x_topic]); })
       .attr("cy", function(d) { return y(d[y_topic]); })
-      .style("fill", function(d) { return color(d.party); });
+      .style("fill", function(d) { 
+        if (d.party=="D") return "blue";
+        else if(d.party=="R") return "red";
+        else if(d.party=="I") return "yellow";
+      });
 
   var legend = svg.selectAll(".legend")
-      .data(color.domain())
+      .data(parties)
     .enter().append("g")
       .attr("class", "legend")
       .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
@@ -106,14 +113,21 @@ d3.tsv("data.tsv", function(error, data) {
       .attr("x", width - 18)
       .attr("width", 18)
       .attr("height", 18)
-      .style("fill", color);
+      .style("fill", function(d) {
+        if (d == "Democratic") return "blue";
+        else if (d == "Republican") return "red";
+        else if (d == "Independent") return "yellow";
+      });
 
   legend.append("text")
       .attr("x", width - 24)
       .attr("y", 9)
       .attr("dy", ".35em")
       .style("text-anchor", "end")
-      .text(function(d) { return d; });
+      .text(function(d) { 
+        return d;
+      });
+
 
 });
 
