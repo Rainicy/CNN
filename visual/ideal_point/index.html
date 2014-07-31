@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<style>
+<head>
+<title>Ideal Point</title>
+  <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.8.3.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="jquery.tipsy.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="http://onehackoranother.com/projects/jquery/tipsy/stylesheets/tipsy.css" type="text/css" title="no title" charset="utf-8"/>
+<style type="text/css">
 
 body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -15,22 +21,21 @@ body {
   fill: none;
   stroke: #000;
   shape-rendering: crispEdges;
+  opacity: 1;
 }
 
-.dot {
-  stroke: #000;
-}
-
-svg {
-  font: 10px sans-serif;
-}
+.circles { opacity: .5; }
 
 .overlay {
   fill: none;
   pointer-events: all;
 }
 
+.tipsy { font-size:20px; margin-top:-40px; margin-left:-240px;}
+
 </style>
+
+</head>
 <body>
   <H1 align="center"> Ideal Point </H1>
   <p>Choose X:
@@ -135,16 +140,17 @@ var changeTopic = function() {
         .style("text-anchor", "end")
         .text(y_topic);
 
+    // zoom and drag functions
     svg.call(d3.behavior.zoom().x(x).y(y).scaleExtent([1, 8]).on("zoom", zoom));
     svg.append("rect")
         .attr("class", "overlay")
         .attr("width", width)
         .attr("height", height);
-    var circle = svg.selectAll(".dot")
+    var circles = svg.selectAll("circle")
         .data(data)
       .enter().append("circle")
-        .attr("class", "dot")
-        .attr("r", 3.5)
+        .attr("class", "circles")
+        .attr("r", 4)
         .attr("transform", transform)
         // .attr("cx", function(d) { return x(d[x_topic]); })
         // .attr("cy", function(d) { return y(d[y_topic]); })
@@ -153,6 +159,48 @@ var changeTopic = function() {
           else if(d.party=="R") return "red";
           else if(d.party=="I") return "yellow";
         });
+
+    // what to do when we mouse over a bubble
+    var mouseOn = function() { 
+        var circle = d3.select(this);
+
+        // transition to increase size/opacity of bubble
+        circle.transition()
+        .duration(800).style("opacity", 1)
+        .attr("r", 16).ease("elastic");
+
+        // function to move mouseover item to front of SVG stage, in case
+        // another bubble overlaps it
+        d3.selection.prototype.moveToFront = function() { 
+          return this.each(function() { 
+          this.parentNode.appendChild(this); 
+          }); 
+        };
+
+        // skip this functionality for IE9, which doesn't like it
+        if (!$.browser.msie) {
+          circle.moveToFront(); 
+          }
+    };
+
+    // what happens when we leave a bubble? 
+    var mouseOff = function() {
+        var circle = d3.select(this);
+
+        // go back to original size and opacity
+        circle.transition()
+        .duration(800).style("opacity", .6)
+        .attr("r", 4).ease("elastic");
+    };
+
+    circles.on("mouseover", mouseOn);
+    circles.on("mouseout", mouseOff);
+
+    // tooltips (using jQuery plugin tipsy)
+    circles.append("title")
+          .text(function(d) { return d.name; });
+
+    $(".circles").tipsy({ gravity: 's', });
 
     var legend = svg.selectAll(".legend")
         .data(parties)
@@ -180,7 +228,7 @@ var changeTopic = function() {
         });
 
     function zoom() {
-      circle.attr("transform", transform);
+      circles.attr("transform", transform);
     }
 
     function transform(d) {
