@@ -37,9 +37,9 @@ body {
 
 </head>
 <body>
-  <H1 align="center"> Ideal Point </H1>
-  <p>Choose X:
-    <select onchange="changeTopic()" id="dropBox1">
+  <div><H1 align="center"> Ideal Point </H1></div>
+  <div><p>Choose X:
+    <select onchange="changeTopic(0)" id="dropBox1">
     <option selected>Foreign</option>
     <option>Education</option>
     <option>Individual_roperty</option>
@@ -51,9 +51,9 @@ body {
     <option>Funds</option>
     <option>Public_transportation</option>
     </select>
-  </p>
-  <p>Choose Y:
-    <select onchange="changeTopic()" id="dropBox2">
+  &nbsp &nbsp &nbsp
+  Choose Y:
+    <select onchange="changeTopic(0)" id="dropBox2">
       <option>Foreign</option>
       <option selected>Education</option>
       <option>Individual_roperty</option>
@@ -66,9 +66,19 @@ body {
       <option>Public_transportation</option>
     </select>
   </p>
+  <p>
+  Search by Name:
+    <input type="text" id="searchBox" onkeydown="if (event.keyCode == 13) document.getElementById('search').click()">
+    <input type="button" id="search" value="Search" onclick="changeTopic(1)"/>
+    <input type="button" id="reset" value="Reset" onclick="changeTopic(0)">
+  </p>
+  </div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 // References: 1) http://bl.ocks.org/mbostock/3887118#index.html
+//             2) http://bl.ocks.org/mbostock/3892928
+//             3) http://bl.ocks.org/nsonnad/4481531
+//             4) http://bl.ocks.org/d3noob/9576689
 
 // all the topics for user filtering
 var topics = ["Foreign", "Education", "Individual_roperty", "Financial", "Military", "Law", "Health_service", "Health_expenses", "Funds", "Public_transportation"]
@@ -80,27 +90,31 @@ var margin = {top: 20, right: 20, bottom: 30, left: 40},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
+var x = d3.scale.linear()
+  .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+// var color = d3.scale.category10();
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var svg = d3.select("body").append("svg");
+
 // update function
-var changeTopic = function() {
+// flag == 1, means search, filter by search name,
+// flag == 0, means update. 
+var changeTopic = function(flag) {
   var x_topic = document.getElementById('dropBox1').selectedOptions[0].text;
   var y_topic = document.getElementById('dropBox2').selectedOptions[0].text;
-
-  d3.select("svg").remove()
-  var x = d3.scale.linear()
-    .range([0, width]);
-
-  var y = d3.scale.linear()
-      .range([height, 0]);
-
-  // var color = d3.scale.category10();
-
-  var xAxis = d3.svg.axis()
-      .scale(x)
-      .orient("bottom");
-
-  var yAxis = d3.svg.axis()
-      .scale(y)
-      .orient("left");
+  var searchName = document.getElementById('searchBox').value;
 
   d3.select("svg").remove();
   var svg = d3.select("body").append("svg")
@@ -139,7 +153,7 @@ var changeTopic = function() {
         .attr("dy", ".71em")
         .style("text-anchor", "end")
         .text(y_topic);
-        
+
     // zoom and drag functions
     var zoom = d3.behavior.zoom()
           .x(x)
@@ -152,10 +166,24 @@ var changeTopic = function() {
         .attr("width", width)
         .attr("height", height);
 
-    var circles = svg.selectAll("circle")
+
+    if (flag == 1) {
+      var circles = svg.selectAll("circle")
         .data(data)
       .enter().append("circle")
-        .attr("class", "circles")
+        .filter(function(d) { 
+          // ignore capital
+          lowerName = d.name.toLowerCase();
+          searchName = searchName.toLowerCase();
+          return lowerName.indexOf(searchName) >= 0; });
+    }
+    else {
+      var circles = svg.selectAll("circle")
+        .data(data)
+      .enter().append("circle");
+    }
+
+    circles.attr("class", "circles")
         .attr("r", 4)
         .attr("transform", transform)
         // .attr("cx", function(d) { return x(d[x_topic]); })
@@ -242,10 +270,9 @@ var changeTopic = function() {
     function transform(d) {
       return "translate(" + x(d[x_topic]) + "," + y(d[y_topic]) + ")";
     }
-
   });
-}
+};
 
 
-changeTopic()
+changeTopic(0)
 </script>
