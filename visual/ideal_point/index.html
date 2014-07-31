@@ -139,13 +139,19 @@ var changeTopic = function() {
         .attr("dy", ".71em")
         .style("text-anchor", "end")
         .text(y_topic);
-
+        
     // zoom and drag functions
-    svg.call(d3.behavior.zoom().x(x).y(y).scaleExtent([1, 8]).on("zoom", zoom));
+    var zoom = d3.behavior.zoom()
+          .x(x)
+          .y(y)
+          .scaleExtent([1,10])
+          .on("zoom", zoomed);
+    svg.call(zoom);
     svg.append("rect")
         .attr("class", "overlay")
         .attr("width", width)
         .attr("height", height);
+
     var circles = svg.selectAll("circle")
         .data(data)
       .enter().append("circle")
@@ -227,7 +233,9 @@ var changeTopic = function() {
           return d;
         });
 
-    function zoom() {
+    function zoomed() {
+      svg.select(".x.axis").call(xAxis);
+      svg.select(".y.axis").call(yAxis);
       circles.attr("transform", transform);
     }
 
