@@ -6,6 +6,11 @@
 <script src="http://code.jquery.com/jquery-1.8.3.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="jquery.tipsy.js" type="text/javascript" charset="utf-8"></script>
 <link rel="stylesheet" href="http://onehackoranother.com/projects/jquery/tipsy/stylesheets/tipsy.css" type="text/css" title="no title" charset="utf-8"/>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+<link rel="stylesheet" href="/resources/demos/style.css">
+
 <style type="text/css">
 
 body {
@@ -85,6 +90,30 @@ body {
   </p>
   </div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
+
+<script>
+// Automaticlly fill the search box.
+$(function() {
+    var names = [];
+    var states = [];
+    d3.tsv("data.tsv", function(error, data) {
+      data.forEach(function (d) {
+        if( $.inArray(d["name"], names) == -1 ) {
+          names.push(d["name"]);
+        }
+        if( $.inArray(d["state"], states) == -1 ) {
+          states.push(d["state"]);
+        }
+      });
+    });
+    $( "#searchBox" ).autocomplete({
+      source: names.sort()
+    });
+    $( "#searchStateBox" ).autocomplete({
+      source: states.sort()
+    });
+});
+</script>
 <script>
 // References: 1) http://bl.ocks.org/mbostock/3887118#index.html
 //             2) http://bl.ocks.org/mbostock/3892928
