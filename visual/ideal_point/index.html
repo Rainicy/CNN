@@ -321,7 +321,7 @@ var changeTopic = function(flag) {
     circles.append("title")
           .text(function(d) { return d.name + ', ' + d.state; });
 
-    $(".circles").tipsy({ gravity: 's', });
+    $(".circles").tipsy({ gravity: 's',});
 
     var legend = svg.selectAll(".legend")
         .data(parties)
