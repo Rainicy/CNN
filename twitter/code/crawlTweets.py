@@ -47,7 +47,7 @@ def get_all_tweets(user_id, outfile, api):
 					file.write(outfile + '\t' + str(e.response.status) + '\n')
 					file.close()
 				return
-			elif e.response.status == 429:			# rate limit
+			elif e.response.status == 429:			# rate limit message code = 88
 				print "Waiting for one minutes until you can send the request again..."
 				time.sleep(60)
 				continue
