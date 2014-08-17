@@ -18,19 +18,16 @@ consumer_key = "EmEvdgcg4QHL7zkQA8ZaEw"
 consumer_secret = "Dy4Zdb2BFWpzH84T9k3bfO0ESx8eWrXzKM9iAEzw"
 access_key = "1536493429-9CsKdJkQSYf5o9TsXJCvAz5ZFvhunuWTZlgxpcM"
 access_secret = "rPy8TMpa74hvlYEhQVz8nGdDb132TwQQil39I9Hf1zcK0"
+
+logFile = '../log/tweets.log'
  
 # @classmethod
 class JsonParser(Parser):
     def parse(self, method, payload):
         return json.loads(payload)
  
-def get_all_tweets(user_id, outfile):
+def get_all_tweets(user_id, outfile, api):
 	#Twitter only allows access to a users most recent 3240 tweets with this method
-	
-	#authorize twitter, initialize tweepy
-	auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-	auth.set_access_token(access_key, access_secret)
-	api = tweepy.API(auth, parser=JsonParser())
 	
 	#initialize a list to hold all the tweepy Tweets
 	alltweets = []	
@@ -41,10 +38,24 @@ def get_all_tweets(user_id, outfile):
 		try:
 			new_tweets = api.user_timeline(user_id = user_id,count=200)
 			break
-		except tweepy.TweepError:
-			print "Waiting for one minutes until you can send the request again..."
-			time.sleep(60)
-			continue
+		except tweepy.TweepError as e:
+			print e 
+			if e.response.status == 401:
+				with open(outfile, 'w') as file:
+					file.close()
+				with open(logFile, 'a') as file:
+					file.write(outfile + '\t' + str(e.response.status) + '\n')
+					file.close()
+				return
+			elif e.response.status == 429:			# rate limit
+				print "Waiting for one minutes until you can send the request again..."
+				time.sleep(60)
+				continue
+			else:
+				with open(logFile, 'a') as file:
+					file.write(outfile + '\t' + str(e.response.status) + '\n')
+					file.close()
+				return
 		except StopIteration:
 			break
 
@@ -63,10 +74,24 @@ def get_all_tweets(user_id, outfile):
 			try:
 				new_tweets = api.user_timeline(user_id = user_id,count=200,max_id=oldest)
 				break
-			except tweepy.TweepError:
-				print "Waiting for one minutes until you can send the request again..."
-				time.sleep(60)
-				continue
+			except tweepy.TweepError as e:
+				print e 
+				if e.response.status == 401:
+					with open(outfile, 'w') as file:
+						file.close()
+					with open(logFile, 'a') as file:
+						file.write(outfile + '\t' + str(e.response.status) + '\n')
+						file.close()
+					return
+				elif e.response.status == 429:			# rate limit
+					print "Waiting for one minutes until you can send the request again..."
+					time.sleep(60)
+					continue
+				else:
+					with open(logFile, 'a') as file:
+						file.write(outfile + '\t' + str(e.response.status) + '\n')
+						file.close()
+					return
 			except StopIteration:
 				break
 		
@@ -87,6 +112,12 @@ def get_all_tweets(user_id, outfile):
  
  
 if __name__ == '__main__':
+
+	#authorize twitter, initialize tweepy
+	auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+	auth.set_access_token(access_key, access_secret)
+	api = tweepy.API(auth, parser=JsonParser())
+
 	# read list
 	user_ids = []
 	fin = open('../data/top-friends', 'r')
@@ -110,4 +141,4 @@ if __name__ == '__main__':
 			continue
 
 		print user_id
-		get_all_tweets(user_id, s_out_tweet)
+		get_all_tweets(user_id, s_out_tweet, api)
