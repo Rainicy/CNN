@@ -71,8 +71,8 @@ body {
       <option>Public transportation</option>
     </select>
   &nbsp &nbsp &nbsp
-  Filter by Representatives:
-    <select onchange="changeTopic(2)" id="representDropBox">
+  Filter by Parties:
+    <select onchange="changeTopic(1)" id="representDropBox">
       <option selected></option>
       <option>Democratic</option>
       <option>Republican</option>
@@ -81,12 +81,12 @@ body {
   <p>
   Search by Name:
     <input type="text" id="searchBox" onkeydown="if (event.keyCode == 13) document.getElementById('search').click()">
-    <input type="button" id="search" value="Search" onclick="changeTopic(1)"/>
+    <input type="button" id="search" value="Search" onclick="changeTopic(2)"/>
   &nbsp &nbsp &nbsp
   Search by State(Abbreviation):
     <input type="text" id="searchStateBox" onkeydown="if (event.keyCode == 13) document.getElementById('searchState').click()">
     <input type="button" id="searchState" value="Search" onclick="changeTopic(3)"/>
-    <input type="button" id="reset" value="Reset" onclick="changeTopic(0)">
+    <input type="button" id="reset" value="Reset" onclick="history.go(0)">
   </p>
   </div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -211,65 +211,18 @@ var changeTopic = function(flag) {
         .attr("height", height);
 
 
-    if (flag > 0) {
+    if (present != "") {  // filter by present.
       var circles = svg.selectAll("circle")
         .data(data)
       .enter().append("circle")
         .filter(function(d) { 
-          // ignore capital
-          lowerName = d.name.toLowerCase();
-          searchName = searchName.toLowerCase();
-          flags_1 = (lowerName.indexOf(searchName) >= 0);
-
-          if (present == "")
-            flags_2 = true;
-          else flags_2 = (present.charAt(0) == d.party);
-
-          if (searchState == "") flags_3 = true;
-          else {
-              lowerState = d.state.toLowerCase();
-              searchState = searchState.toLowerCase();
-              flags_3 = (lowerState == searchState);
-          }
-           
-          return flags_1 && flags_2 && flags_3;   
+          return (present.charAt(0) == d.party);
         });
     }
-    // if (flag == 1) {  // filter by name
-    //   var circles = svg.selectAll("circle")
-    //     .data(data)
-    //   .enter().append("circle")
-    //     .filter(function(d) { 
-    //       // ignore capital
-    //       lowerName = d.name.toLowerCase();
-    //       searchName = searchName.toLowerCase();
-    //       return lowerName.indexOf(searchName) >= 0; });
-    // }
-    // else if (flag == 2) { // filter by representative
-    //   var circles = svg.selectAll("circle")
-    //     .data(data)
-    //     .enter().append("circle")
-    //       .filter(function(d) {
-    //           if (present == "")
-    //             return true;
-    //           else return (present.charAt(0) == d.party);
-    //       });
-    // }
-    // else if (flag == 3) {
-    //   var circles = svg.selectAll("circle")
-    //       .data(data)
-    //       .enter().append("circle")
-    //       .filter(function (d) {
-    //           if (searchState == "") return true;
-    //           lowerState = d.state.toLowerCase();
-    //           searchState = searchState.toLowerCase();
-    //           return (lowerState == searchState);
-    //       });
-    // }
     else {
-      var circles = svg.selectAll("circle")
-        .data(data)
-      .enter().append("circle");
+    var circles = svg.selectAll("circle")
+      .data(data)
+    .enter().append("circle");
     }
 
     circles.attr("class", "circles")
@@ -280,6 +233,46 @@ var changeTopic = function(flag) {
           else if(d.party=="R") return "red";
           else if(d.party=="I") return "yellow";
         });
+
+    circles.each(function(d) {
+      if ((searchName!="") || (searchState != "")) {
+          // ignore capital
+        lowerName = d.name.toLowerCase();
+        searchName = searchName.toLowerCase();
+        ifMatchName = (lowerName.indexOf(searchName) >= 0);
+
+ 
+        lowerState = d.state.toLowerCase();
+        searchState = searchState.toLowerCase();
+        ifMatchState = (lowerState == searchState);
+
+        if ((ifMatchName && (searchState=="")) || 
+              (ifMatchState && (searchName=="")) || 
+              (ifMatchState && ifMatchName)) {
+          var circle = d3.select(this);
+
+          // transition to increase size/opacity of bubble
+          circle.transition()
+          .duration(800).style("opacity", 0.8)
+          .attr("r", 12).ease("elastic");
+
+          // function to move mouseover item to front of SVG stage, in case
+          // another bubble overlaps it
+          d3.selection.prototype.moveToFront = function() { 
+            return this.each(function() { 
+            this.parentNode.appendChild(this); 
+            }); 
+          };
+
+          // skip this functionality for IE9, which doesn't like it
+          if (!$.browser.msie) {
+            circle.moveToFront(); 
+          }
+        }
+      }
+    });
+
+
 
     // what to do when we mouse over a bubble
     var mouseOn = function() { 

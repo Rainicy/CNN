@@ -63,7 +63,15 @@ def get_all_tweets(user_id, outfile, api):
 	alltweets.extend(new_tweets)
 	
 	#save the id of the oldest tweet less one
-	oldest = alltweets[-1]['id'] - 1
+	try:
+		oldest = alltweets[-1]['id'] - 1
+	except IndexError as e:
+		with open(outfile, 'w') as file:
+			file.close()
+		with open(logFile, 'a') as file:
+			file.write(outfile + '\t' + str(e) + '\n')
+			file.close()
+		return
 	
 	#keep grabbing tweets until there are no tweets left to grab
 	while len(new_tweets) > 0:
@@ -120,10 +128,11 @@ if __name__ == '__main__':
 
 	# read list
 	user_ids = []
-	fin = open('../data/top-friends', 'r')
+	fin = open('../data/split/0', 'r')
 	lines = fin.readlines()
 	for line in lines:
 		user_id = line.split('\t')[0]
+		user_id = user_id.strip('\n')
 		user_ids.append(user_id)
 
 	total = len(user_ids)
