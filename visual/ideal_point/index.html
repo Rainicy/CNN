@@ -29,7 +29,7 @@ body {
   opacity: 1;
 }
 
-.circles { opacity: .5; }
+.circles { opacity: .2; }
 
 .overlay {
   fill: none;
@@ -220,9 +220,9 @@ var changeTopic = function(flag) {
         });
     }
     else {
-    var circles = svg.selectAll("circle")
-      .data(data)
-    .enter().append("circle");
+      var circles = svg.selectAll("circle")
+        .data(data)
+      .enter().append("circle");
     }
 
     circles.attr("class", "circles")
@@ -234,45 +234,47 @@ var changeTopic = function(flag) {
           else if(d.party=="I") return "yellow";
         });
 
-    circles.each(function(d) {
-      if ((searchName!="") || (searchState != "")) {
-          // ignore capital
-        lowerName = d.name.toLowerCase();
-        searchName = searchName.toLowerCase();
-        ifMatchName = (lowerName.indexOf(searchName) >= 0);
+    var filterCircles = function() {
+        circles.each(function(d) {
+        if ((searchName!="") || (searchState != "")) {
+            // ignore capital
+          lowerName = d.name.toLowerCase();
+          searchName = searchName.toLowerCase();
+          ifMatchName = (lowerName.indexOf(searchName) >= 0);
 
- 
-        lowerState = d.state.toLowerCase();
-        searchState = searchState.toLowerCase();
-        ifMatchState = (lowerState == searchState);
+   
+          lowerState = d.state.toLowerCase();
+          searchState = searchState.toLowerCase();
+          ifMatchState = (lowerState == searchState);
 
-        if ((ifMatchName && (searchState=="")) || 
-              (ifMatchState && (searchName=="")) || 
-              (ifMatchState && ifMatchName)) {
-          var circle = d3.select(this);
+          if ((ifMatchName && (searchState=="")) || 
+                (ifMatchState && (searchName=="")) || 
+                (ifMatchState && ifMatchName)) {
+            var circle = d3.select(this);
 
-          // transition to increase size/opacity of bubble
-          circle.transition()
-          .duration(800).style("opacity", 0.8)
-          .attr("r", 12).ease("elastic");
+            // transition to increase size/opacity of bubble
+            circle.transition()
+              .duration(800).style("opacity", 0.6)
+              .attr("r", 12).ease("elastic");
 
-          // function to move mouseover item to front of SVG stage, in case
-          // another bubble overlaps it
-          d3.selection.prototype.moveToFront = function() { 
-            return this.each(function() { 
-            this.parentNode.appendChild(this); 
-            }); 
-          };
+            // function to move mouseover item to front of SVG stage, in case
+            // another bubble overlaps it
+            d3.selection.prototype.moveToFront = function() { 
+              return this.each(function() { 
+              this.parentNode.appendChild(this); 
+              }); 
+            };
 
-          // skip this functionality for IE9, which doesn't like it
-          if (!$.browser.msie) {
-            circle.moveToFront(); 
+            // skip this functionality for IE9, which doesn't like it
+            if (!$.browser.msie) {
+              circle.moveToFront(); 
+            }
           }
         }
-      }
-    });
+      });
+    };
 
-
+    filterCircles();
 
     // what to do when we mouse over a bubble
     var mouseOn = function() { 
@@ -287,14 +289,14 @@ var changeTopic = function(flag) {
         // another bubble overlaps it
         d3.selection.prototype.moveToFront = function() { 
           return this.each(function() { 
-          this.parentNode.appendChild(this); 
+            this.parentNode.appendChild(this); 
           }); 
         };
 
         // skip this functionality for IE9, which doesn't like it
         if (!$.browser.msie) {
           circle.moveToFront(); 
-          }
+        }
     };
 
     // what happens when we leave a bubble? 
@@ -303,8 +305,9 @@ var changeTopic = function(flag) {
 
         // go back to original size and opacity
         circle.transition()
-        .duration(800).style("opacity", .6)
+        .duration(800).style("opacity", .2)
         .attr("r", 4).ease("elastic");
+        filterCircles();
     };
 
     circles.on("mouseover", mouseOn);

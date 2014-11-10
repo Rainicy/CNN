@@ -57,7 +57,7 @@ def main():
 				    if (removeLink not in url):	# if it is not a video link
 				    	if buildArticleTables(url, count): # Also if the article use the disqus system
 				    		writeDictFile(url)	# write the Link
-				    		dictList.append(dictList)
+				    		# dictList.append(dictList)
 
 				    		# update the dictionary list and count 
 				    		dictList.append(url) # add the link to the link list

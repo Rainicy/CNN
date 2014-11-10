@@ -49,8 +49,11 @@ def buildArticleTables(url, count):
 			print "Waiting for 5 seconds until you can send the request again..."
 			sleep(5)
 
-	soup = BeautifulSoup(content)
-	script = soup.script.string
+	try:
+		soup = BeautifulSoup(content)
+		script = soup.script.string
+	except:
+		return False
 
 	# if it is a disuqs system
 	if disqus in script:

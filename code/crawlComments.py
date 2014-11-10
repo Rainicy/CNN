@@ -84,6 +84,11 @@ def main():
 					# write the log to comments.log
 					writeCommentsLog(LogName, cur_id, startTime, datetime.now(), count)
 					sleep(3)
+
+			# save current line number to the lineNumOfNews for next time.
+			with open('../data/lineNumOfNews', 'a') as file:
+				file.write(str(i)+'\n')
+				file.close()
 		# stop crawling comments
 		else:
 			# save current line number to the lineNumOfNews for next time.
@@ -96,7 +101,7 @@ def main():
 
 if __name__ == '__main__':
 	while True:
-		print '-------------Crawling Comments------------'
-		main()
 		print '------------Waiting for 3 hours-----------'
 		sleep(10800)
+		print '-------------Crawling Comments------------'
+		main()
